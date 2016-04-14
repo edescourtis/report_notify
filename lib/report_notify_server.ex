@@ -33,16 +33,26 @@ defmodule ReportNotifyServer do
 
   def handle_cast({:notify, data}, state) do
     IO.puts "Server received notification: #{inspect data}"
-    state = Map.put state, data["id"], data
+    id = Integer.to_string(data["id"])
+    state = Map.put state, id, data
+    # tell everyone
+    state = case state[id] do
+      %{"state" => "COMPLETED"} ->
+        Map.delete(state, id)
+      %{"state" => "CANCELLED"} ->
+        Map.delete(state, id)
+      _ ->
+        state
+    end
     # tell everyone
     members = :pg2.get_members :web_notifications
-    {:ok, msg} = Poison.encode data, []
+    {:ok, msg} = Poison.encode %{type: :update, data: data}, [:pretty]
     for m <- members, do: send m, {:msg, msg}
     {:noreply, state}
   end
 
   def handle_cast({:connect, client}, state) do
-    {:ok, msg} = Poison.encode state, []
+    {:ok, msg} = Poison.encode %{type: :state, data: state}, [:pretty]
     send client, {:msg, msg}
     {:noreply, state}
   end

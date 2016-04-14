@@ -11,7 +11,7 @@ defmodule ReportNotifyPostHandler do
 
     def content_types_accepted(req, state) do
         {[
-            {{"application", "json", []}, :handle_notify}
+            {:*, :handle_notify}
         ], req, state}
     end
 
