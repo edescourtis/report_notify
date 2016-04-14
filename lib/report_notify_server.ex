@@ -37,9 +37,10 @@ defmodule ReportNotifyServer do
     state = Map.put state, id, data
     # tell everyone
     state = case state[id] do
-      %{"state" => "COMPLETED"} ->
-        Map.delete(state, id)
-      %{"state" => "CANCELLED"} ->
+      %{"state" => status} when
+        status === "COMPLETED" or
+        status === "CANCELLED" or
+        status === "FAILED" ->
         Map.delete(state, id)
       _ ->
         state
