@@ -1,0 +1,31 @@
+<div>
+  <h1>Report List</h1>
+  <table class="table">
+    <thead>
+    <tr>
+      <td>Id</td>
+      <td>Name</td>
+      <td>Broadcast Id</td>
+      <td>Status</td>
+      <td></td>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="#report of reports" style="margin-bottom: 10px;">
+      <td>{{report.id}}</td>
+      <td>{{report.name}}</td>
+      <td>{{report.broadcast_id}}</td>
+      <td>{{report.status}}</td>
+      <td><button class="btn btn-primary btn-xs" (click)="cancelReport(report)">Cancel</button></td>
+    </tr>
+    </tbody>
+  </table>
+
+  <div class="addReportControls">
+    <input #id placeholder="id" />
+    <input #name placeholder="name" />
+    <input #broadcast_id placeholder="broadcast_id" />
+    <input #status placeholder="status" />
+    <button class="btn btn-primary btn-xs" (click)="addReport(id, name, broadcast_id, status)">Add Report</button>
+  </div>
+</div>
